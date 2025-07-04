@@ -1,45 +1,99 @@
-Overview
-========
+# 🌦️ Weather ETL Pipeline using Apache Airflow
 
-Welcome to Astronomer! This project was generated after you ran 'astro dev init' using the Astronomer CLI. This readme describes the contents of the project, as well as how to run Apache Airflow on your local machine.
+This project implements an **ETL pipeline using Apache Airflow** to extract, transform, and load real-time weather data from the [Open-Meteo API](https://open-meteo.com/). The pipeline collects weather data such as temperature and wind information for a specific geographic location and stores it in a PostgreSQL database.
 
-Project Contents
-================
+---
 
-Your Astro project contains the following files and folders:
 
-- dags: This folder contains the Python files for your Airflow DAGs. By default, this directory includes one example DAG:
-    - `example_astronauts`: This DAG shows a simple ETL pipeline example that queries the list of astronauts currently in space from the Open Notify API and prints a statement for each astronaut. The DAG uses the TaskFlow API to define tasks in Python, and dynamic task mapping to dynamically print a statement for each astronaut. For more on how this DAG works, see our [Getting started tutorial](https://www.astronomer.io/docs/learn/get-started-with-airflow).
-- Dockerfile: This file contains a versioned Astro Runtime Docker image that provides a differentiated Airflow experience. If you want to execute other commands or overrides at runtime, specify them here.
-- include: This folder contains any additional files that you want to include as part of your project. It is empty by default.
-- packages.txt: Install OS-level packages needed for your project by adding them to this file. It is empty by default.
-- requirements.txt: Install Python packages needed for your project by adding them to this file. It is empty by default.
-- plugins: Add custom or community plugins for your project to this file. It is empty by default.
-- airflow_settings.yaml: Use this local-only file to specify Airflow Connections, Variables, and Pools instead of entering them in the Airflow UI as you develop DAGs in this project.
 
-Deploy Your Project Locally
-===========================
+## 🚀 Features
 
-Start Airflow on your local machine by running 'astro dev start'.
+- **Data Extraction**: Pulls current weather data from Open-Meteo API
+- **Data Transformation**: Extracts relevant fields (temperature, wind, time)
+- **Data Loading**: Inserts transformed data into a PostgreSQL table
+- **Airflow UI**: View DAGs, monitor runs, and manage tasks via web UI
 
-This command will spin up five Docker containers on your machine, each for a different Airflow component:
+---
 
-- Postgres: Airflow's Metadata Database
-- Scheduler: The Airflow component responsible for monitoring and triggering tasks
-- DAG Processor: The Airflow component responsible for parsing DAGs
-- API Server: The Airflow component responsible for serving the Airflow UI and API
-- Triggerer: The Airflow component responsible for triggering deferred tasks
+## 🧠 DAG Overview
 
-When all five containers are ready the command will open the browser to the Airflow UI at http://localhost:8080/. You should also be able to access your Postgres Database at 'localhost:5432/postgres' with username 'postgres' and password 'postgres'.
+| Task | Description |
+|------|-------------|
+| `extract_weather_data` | Uses `HttpHook` to request weather data from Open-Meteo |
+| `transform_weather_data` | Transforms JSON into a structured dictionary |
+| `load_weather_data` | Loads data into a PostgreSQL `weather_data` table |
 
-Note: If you already have either of the above ports allocated, you can either [stop your existing Docker containers or change the port](https://www.astronomer.io/docs/astro/cli/troubleshoot-locally#ports-are-not-available-for-my-local-airflow-webserver).
+---
 
-Deploy Your Project to Astronomer
-=================================
+## ⚙️ Technologies
 
-If you have an Astronomer account, pushing code to a Deployment on Astronomer is simple. For deploying instructions, refer to Astronomer documentation: https://www.astronomer.io/docs/astro/deploy-code/
+- [Apache Airflow](https://airflow.apache.org/)
+- [Open-Meteo API](https://open-meteo.com/)
+- PostgreSQL
+- Astro CLI (via [Astronomer](https://www.astronomer.io/))
 
-Contact
-=======
+---
 
-The Astronomer CLI is maintained with love by the Astronomer team. To report a bug or suggest a change, reach out to our support.
+## 📦 Installation & Setup
+
+1. **Install Astro CLI** (if not done already):  
+   [Install instructions](https://docs.astronomer.io/astro/cli/install-cli)
+
+2. **Clone this repo**:
+
+   ```bash
+   git clone https://github.com/your-username/weather-etl-airflow.git
+   cd weather-etl-airflow
+Add dependencies to requirements.txt:
+
+text
+Copy
+Edit
+apache-airflow
+apache-airflow-providers-http
+apache-airflow-providers-postgres
+pandas
+requests
+Start Airflow locally:
+
+astro dev start
+Open the Airflow UI:
+Visit http://localhost:8080
+
+🧪 How to Run the DAG
+Turn on the weather_etl_pipeline toggle in the UI
+
+Click the Trigger DAG button to run it manually
+
+Monitor task execution via the Graph View or Logs
+
+🗃️ PostgreSQL Table Schema
+sql
+Copy
+Edit
+CREATE TABLE IF NOT EXISTS weather_data (
+    id SERIAL PRIMARY KEY,
+    latitude FLOAT,
+    longitude FLOAT,
+    temperature FLOAT,
+    winddirection FLOAT,
+    windspeed FLOAT,
+    weathercode INT,
+    time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+📌 Future Enhancements
+Add historical weather tracking
+
+Send data to cloud storage (e.g., AWS S3 or Google BigQuery)
+
+Add data validation and alerting
+
+Parameterize location inputs via Airflow Variables
+
+🧑‍💻 Author
+Kaverappa (@kaverapp-soul1)
+Powered by Astronomer & Airflow ☁️
+
+📜 License
+MIT License. Use freely and responsibly.
+
