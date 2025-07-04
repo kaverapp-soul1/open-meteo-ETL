@@ -1,0 +1,3 @@
+#config.yaml
+# New lines to add to the config file
+ASTRO_DEV_INIT_LOG: 'logs/astro_dev_init.log'
