@@ -9,3 +9,8 @@ airflow-webserver.pid
 webserver_config.py
 airflow.cfg
 airflow.db
+# Ignore Python bytecode files
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
